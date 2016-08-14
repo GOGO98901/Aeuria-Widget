@@ -1,37 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/widget_frame"
-    android:layout_width="match_parent"
-    android:layout_height="20dip"
-    android:padding="@dimen/widget_margin" >
+    android:id="@+id/widget_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
 
-    <LinearLayout
-        android:id="@+id/widget_layout"
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/widget_Image"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal" >
+        android:layout_gravity="center_horizontal|center"
+        android:layout_marginTop="5dip"
+        android:contentDescription="@string/app_name"
+        android:padding="10dip" >
 
-        <TextView
-            android:id="@+id/widget_hour"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center"
-            android:layout_marginTop="5dip"
-            android:padding="10dip"
-            android:text="@string/loading"
-            android:textAllCaps="true"
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/widget_minute"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center"
-            android:layout_marginTop="5dip"
-            android:padding="10dip"
-            android:text="@string/loading"
-            android:textColor="@android:color/black"
-            android:typeface="monospace" />
-    </LinearLayout>
+    </ImageView>
 
 </LinearLayout>
