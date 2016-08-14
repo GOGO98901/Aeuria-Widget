@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Aeuria Widget</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_aurthor">Rory Claasen</string>
     <string name="action_settings">Settings</string>
 
 </resources>
