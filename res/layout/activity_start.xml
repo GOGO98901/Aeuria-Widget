@@ -19,6 +19,7 @@
         android:id="@+id/intro_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:gravity="center"
         android:paddingBottom="20sp"
         android:paddingLeft="10sp"

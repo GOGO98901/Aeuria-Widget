@@ -40,7 +40,6 @@ public class FancyClockFace extends View {
 
 	public FancyClockFace(Context context) {
 		super(context);
-
 		init(context, null, 0);
 	}
 
@@ -51,6 +50,7 @@ public class FancyClockFace extends View {
 		mPaint.setColor(Color.WHITE);
 		
 		mBounds = new RectF(mLeft, mTop, mRight, mBottom);
+		mSizeChanged = true;
 	}
 
 	public void setTime(long time) {
@@ -106,6 +106,7 @@ public class FancyClockFace extends View {
 		}
 
 		canvas.drawRoundRect(mBounds, (w / 2), (h / 2), mPaint);
+		System.out.println(mBounds);
 
 		// TODO Draw text
 

@@ -129,6 +129,7 @@ public class AeuriaWidget extends AppWidgetProvider {
 	 * @param context application context
 	 */
 	private void startTicking(Context context) {
+		Log.d(TAG, "startTicking");
 		final AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
 		// schedules updates so they occur on the top of the minute
@@ -147,31 +148,7 @@ public class AeuriaWidget extends AppWidgetProvider {
 	 * @return the intent to update the clock
 	 */
 	private PendingIntent createUpdate(Context context) {
+		Log.d(TAG, "Update");
 		return PendingIntent.getBroadcast(context, 0, new Intent(ACTION_CLOCK_UPDATE), PendingIntent.FLAG_UPDATE_CURRENT);
 	}
-
-	/*
-	 * private class MyTime extends TimerTask {
-	 * RemoteViews remoteViews;
-	 * Context context;
-	 * AppWidgetManager appWidgetManager;
-	 * ComponentName thisWidget;
-	 * FancyTime time;
-	 * 
-	 * public MyTime(Context context, AppWidgetManager appWidgetManager) {
-	 * this.context = context;
-	 * this.appWidgetManager = appWidgetManager;
-	 * remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget);
-	 * thisWidget = new ComponentName(context, ViewWidget.class);
-	 * time = new FancyTime(context, new Date());
-	 * }
-	 * 
-	 * @Override
-	 * public void run() {
-	 * remoteViews.setTextViewText(R.id.widget_hour, time.getHour());
-	 * remoteViews.setTextViewText(R.id.widget_minute, time.getMinute());
-	 * appWidgetManager.updateAppWidget(thisWidget, remoteViews);
-	 * }
-	 * }
-	 */
 }
