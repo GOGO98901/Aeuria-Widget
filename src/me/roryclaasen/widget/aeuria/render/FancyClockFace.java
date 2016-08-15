@@ -48,7 +48,8 @@ public class FancyClockFace extends View {
 
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaint.setColor(Color.WHITE);
-		
+		mPaint.setStyle(Paint.Style.FILL);
+
 		mBounds = new RectF(mLeft, mTop, mRight, mBottom);
 		mSizeChanged = true;
 	}
@@ -106,7 +107,8 @@ public class FancyClockFace extends View {
 		}
 
 		canvas.drawRoundRect(mBounds, (w / 2), (h / 2), mPaint);
-		System.out.println(mBounds);
+
+		System.out.println(canvas.getWidth() + ", " + canvas.getHeight());
 
 		// TODO Draw text
 

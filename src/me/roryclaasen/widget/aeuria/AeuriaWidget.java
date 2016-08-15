@@ -66,6 +66,7 @@ public class AeuriaWidget extends AppWidgetProvider {
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+		Log.d(TAG, "onUpdate");
 		final RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget);
 
 		if (clock == null) {
