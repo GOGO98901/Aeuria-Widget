@@ -13,19 +13,27 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <receiver android:name=".ViewWidget" android:label="@string/app_name">
+        <receiver
+            android:name="AeuriaWidget"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="me.roryclaasen.widget.aeuria.ACTION_CLOCK_UPDATE" />
+                <action android:name="android.intent.action.TIME_CHANGED" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider" android:resource="@xml/aeuria_provider"/>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/aeuria_provider" />
         </receiver>
+
         <activity
-            android:name=".StartActivity"
+            android:name="StartActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>

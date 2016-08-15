@@ -1,8 +1,30 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="me.roryclaasen.widget.aeuria.StartActivity"
-    tools:ignore="MergeRootFrame" />
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    tools:context="me.roryclaasen.widget.aeuria.StartActivity" >
 
+    <me.roryclaasen.widget.aeuria.render.FancyClockFace
+        android:id="@+id/clock"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/intro_text"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip" />
+
+    <TextView
+        android:id="@+id/intro_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="20sp"
+        android:paddingLeft="10sp"
+        android:paddingRight="10sp"
+        android:paddingTop="5sp"
+        android:text="@string/intro_text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>
