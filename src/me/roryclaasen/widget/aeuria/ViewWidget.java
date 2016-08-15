@@ -24,7 +24,6 @@ import me.roryclaasen.widget.aeuria.util.FancyTime;
 public class ViewWidget extends AppWidgetProvider {
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-		System.out.println("yay");
 		Paint p = new Paint(); 
 		p.setAntiAlias(true);
 		p.setStyle(Style.STROKE);
@@ -34,14 +33,11 @@ public class ViewWidget extends AppWidgetProvider {
 		Bitmap bitmap = Bitmap.createBitmap(100, 100, Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		canvas.drawArc(new RectF(10, 10, 90, 90), 0, 270, false, p);
+		canvas.drawCircle(0, 0, 50, p);
 
 		RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
 		views.setImageViewBitmap(R.id.widget_Image, bitmap);
-
 		appWidgetManager.updateAppWidget( new ComponentName(context, ViewWidget.class), views);
-		
-
-		System.out.println("updated");
 		// Timer timer = new Timer();
 		// timer.scheduleAtFixedRate(new MyTime(context, appWidgetManager), 1, 1000);
 
