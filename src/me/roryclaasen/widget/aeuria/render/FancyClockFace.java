@@ -15,15 +15,9 @@ public class FancyClockFace extends View {
 
 	private Calendar mCalendar;
 
-	private int mDialWidth;
-	private int mDialHeight;
-
-	private int mBottom;
-	private int mTop;
-	private int mLeft;
-	private int mRight;
-	private boolean mSizeChanged;
-
+	private int mClockAimFor = 400;
+	private int mClockSize = mClockAimFor;
+	private int mMargin;
 	private RectF mBounds;
 
 	private Paint mPaint;
@@ -50,8 +44,8 @@ public class FancyClockFace extends View {
 		mPaint.setColor(Color.WHITE);
 		mPaint.setStyle(Paint.Style.FILL);
 
-		mBounds = new RectF(mLeft, mTop, mRight, mBottom);
-		mSizeChanged = true;
+		mMargin = 8;
+		mBounds = new RectF(mMargin / 2, mMargin / 2, mClockAimFor - mMargin, mClockAimFor - mMargin);
 	}
 
 	public void setTime(long time) {
@@ -73,48 +67,25 @@ public class FancyClockFace extends View {
 	@Override
 	public void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
-
-		mSizeChanged = true;
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 
-		final boolean sizeChanged = mSizeChanged;
-		mSizeChanged = false;
+		fixSizes(canvas);
 
-		final int availW = mRight - mLeft;
-		final int availH = mBottom - mTop;
+		canvas.drawText(mBounds.toString(), 0, 20, mPaint);
+		canvas.drawRoundRect(mBounds, mClockSize / 2, mClockSize / 2, mPaint);
+		
+		//canvas.drawText(mBounds.toString(), 0, 20, mPaint);
+		//canvas.drawText(getMeasuredWidth() + "x" + getMeasuredHeight(), 0, 40, mPaint);
 
-		final int cX = availW / 2;
-		final int cY = availH / 2;
-
-		final int w = mDialWidth;
-		final int h = mDialHeight;
-
-		boolean scaled = false;
-
-		if (availW < w || availH < h) {
-			scaled = true;
-			final float scale = Math.min((float) availW / (float) w, (float) availH / (float) h);
-			canvas.save();
-			canvas.scale(scale, scale, cX, cY);
-		}
-
-		if (sizeChanged) {
-			mBounds.set(cX - (w / 2), cY - (h / 2), cX + (w / 2), cY + (h / 2));
-		}
-
-		canvas.drawRoundRect(mBounds, (w / 2), (h / 2), mPaint);
-
-		System.out.println(canvas.getWidth() + ", " + canvas.getHeight());
+		// canvas.drawColor(mPaint.getColor());
 
 		// TODO Draw text
 
-		if (scaled) {
-			canvas.restore();
-		}
+		//canvas.restore();
 	}
 
 	// from AnalogClock.java
@@ -129,37 +100,43 @@ public class FancyClockFace extends View {
 		float hScale = 1.0f;
 		float vScale = 1.0f;
 
-		if (widthMode != MeasureSpec.UNSPECIFIED && widthSize < mDialWidth) {
-			hScale = (float) widthSize / (float) mDialWidth;
+		if (widthMode != MeasureSpec.UNSPECIFIED && widthSize < mClockSize) {
+			hScale = (float) widthSize / (float) mClockSize;
 		}
 
-		if (heightMode != MeasureSpec.UNSPECIFIED && heightSize < mDialHeight) {
-			vScale = (float) heightSize / (float) mDialHeight;
+		if (heightMode != MeasureSpec.UNSPECIFIED && heightSize < mClockSize) {
+			vScale = (float) heightSize / (float) mClockSize;
 		}
 
 		final float scale = Math.min(hScale, vScale);
 
-		setMeasuredDimension(getDefaultSize((int) (mDialWidth * scale), widthMeasureSpec), getDefaultSize((int) (mDialHeight * scale), heightMeasureSpec));
+		setMeasuredDimension(getDefaultSize((int) (mClockSize * scale), widthMeasureSpec), getDefaultSize((int) (mClockSize * scale), heightMeasureSpec));
 	}
 
 	@Override
 	protected int getSuggestedMinimumHeight() {
-		return mDialHeight;
+		return mClockSize;
 	}
 
 	@Override
 	protected int getSuggestedMinimumWidth() {
-		return mDialWidth;
+		return mClockSize;
 	}
 
-	@Override
-	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-		super.onLayout(changed, left, top, right, bottom);
+	private void fixSizes(final Canvas canvas) {
+		fixSizes(canvas.getWidth(), canvas.getHeight());
+		fixSizes(getWidth(), getHeight());
+		// fixSizes(getMeasuredWidth(), getMeasuredHeight());
+	}
 
-		// because we don't have access to the actual protected fields
-		mRight = right;
-		mLeft = left;
-		mTop = top;
-		mBottom = bottom;
+	private void fixSizes(int width, int height) {
+		width -= mMargin;
+		height -= mMargin;
+		
+		if (width > height) mClockSize = height;
+		else mClockSize = width;
+		if (mClockSize > mClockAimFor) mClockSize = mClockAimFor;
+		
+		mBounds.set((width / 2) - (mClockSize / 2) + (mMargin / 2), (height / 2) - (mClockSize / 2) + (mMargin / 2), mClockSize, mClockSize);
 	}
 }
