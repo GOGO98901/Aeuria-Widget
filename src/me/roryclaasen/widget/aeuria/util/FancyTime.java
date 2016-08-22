@@ -23,6 +23,7 @@ public class FancyTime {
 		String hour = time.split(":")[0];
 		try {
 			int number = Integer.parseInt(hour);
+			if (number == 0) return getWord(12);
 			return getWord(number);
 		} catch (Exception e) {
 			return _context.getString(R.string.error);
@@ -33,8 +34,8 @@ public class FancyTime {
 		String minute = time.split(":")[1];
 		try {
 			int number = Integer.parseInt(minute);
-			if (number == 10 || number == 20 || number == 30 || number == 40 || number == 50) return getWord(number);
-
+			// number = 0;
+			if (number == 0 || number == 10 || number == 20 || number == 30 || number == 40 || number == 50) return getWord(number);
 			if (number < 10) return _context.getString(R.string.ohh) + "-" + getWord(number);
 			if (number < 20) return getWord(number);
 			if (number < 30) return getWord(20) + "-" + getWord(number - 20);
@@ -49,7 +50,7 @@ public class FancyTime {
 	private String getWord(int number) {
 		switch (number) {
 			case (0): {
-				return _context.getString(R.string.zero);
+				return _context.getString(R.string.oclock);
 			}
 			case (1): {
 				return _context.getString(R.string.one);

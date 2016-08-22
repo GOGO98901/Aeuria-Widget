@@ -2,8 +2,11 @@ package me.roryclaasen.widget.aeuria.util;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
+import android.util.DisplayMetrics;
 
 public class AppUtil {
 	public static void openUrl(Activity activity, String url) {
@@ -16,5 +19,12 @@ public class AppUtil {
 			i.setPackage(null);
 			activity.startActivity(i);
 		}
+	}
+
+	public static float convertDpToPixel(float dp, Context context) {
+		Resources resources = context.getResources();
+		DisplayMetrics metrics = resources.getDisplayMetrics();
+		float px = dp * (metrics.densityDpi / 160f);
+		return px;
 	}
 }

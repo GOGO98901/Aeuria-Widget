@@ -12,7 +12,8 @@
     
     <string name="intro_text">This is a preview of the homescreen widget</string>
 
-    <string name="ohh">ohh</string>
+    <string name="ohh">oh</string>
+    <string name="oclock">o/'clock</string>
     <string name="zero">zero</string>
     <string name="one">one</string>
     <string name="two">two</string>
