@@ -34,7 +34,6 @@ public class FancyTime {
 		String minute = time.split(":")[1];
 		try {
 			int number = Integer.parseInt(minute);
-			// number = 0;
 			if (number == 0 || number == 10 || number == 20 || number == 30 || number == 40 || number == 50) return getWord(number);
 			if (number < 10) return _context.getString(R.string.ohh) + "-" + getWord(number);
 			if (number < 20) return getWord(number);

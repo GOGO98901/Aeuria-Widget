@@ -9,11 +9,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
-import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.TextView;
 import me.roryclaasen.widget.aeuria.util.AppUtil;
 import me.roryclaasen.widget.aeuria.util.FancyTime;
 
@@ -30,7 +30,7 @@ public class FancyClockFace extends View {
 
 	private Paint mPaint;
 	private Paint mPaintText;
-	
+
 	private int mTextSizeLarge = 100;
 	private int mTextSizeSmall = 50;
 
@@ -60,7 +60,7 @@ public class FancyClockFace extends View {
 		mCalendar = Calendar.getInstance();
 		mTime = new FancyTime(context, mCalendar.getTime());
 
-		// Typeface font_hour = Typeface.createFromAsset(context.getResources().getAssets(), "fonts/Roboto.ttf");
+		Typeface font_hour = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL); /* Typeface.createFromAsset(context.getResources().getAssets(), "fonts/Roboto.ttf"); */
 		// Typeface font_min = Typeface.createFromAsset(context.getResources().getAssets(), "fonts/MTCORSVA.TTF");
 
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -71,7 +71,7 @@ public class FancyClockFace extends View {
 		mPaintText.setColor(Color.BLACK);
 		mPaintText.setStyle(Paint.Style.FILL);
 		mPaintText.setTextAlign(Align.CENTER);
-		// mPaintText.setTypeface(font_hour);
+		mPaintText.setTypeface(font_hour);
 		mPaintText.setTextSize(AppUtil.convertDpToPixel(100, context));
 
 		mMargin = 8;
@@ -132,18 +132,23 @@ public class FancyClockFace extends View {
 
 		// TODO Draw text
 
-		mPaintText.setTextSize(AppUtil.convertDpToPixel(mTextSizeLarge, mContext));
-		//canvas.drawText(mTime.getHour().toUpperCase(Locale.getDefault()), cX, cY, mPaintText);
-		mPaintText.setTextSize(AppUtil.convertDpToPixel(mTextSizeSmall, mContext));
+		setTextSizeForWidth(mPaintText, mBounds.right - 25, mTime.getHour().toUpperCase(Locale.getDefault()));
+		canvas.drawText(mTime.getHour().toUpperCase(Locale.getDefault()), cX, cY, mPaintText);
+		setTextSizeForWidth(mPaintText, mBounds.right - 75, mTime.getMinute().toUpperCase(Locale.getDefault()));
 		canvas.drawText(mTime.getMinute().toLowerCase(Locale.getDefault()), cX, cY + (int) (mPaintText.getTextSize() / 1.5), mPaintText);
-		
-		Path hourPath = new Path();
-		mPaintText.getTextPath(mTime.getHour().toUpperCase(Locale.getDefault()), 0, mTime.getHour().length(), cX, cY, hourPath);
-		
-		canvas.clipPath(hourPath);
+
 		if (scaled) {
 			canvas.restore();
 		}
+	}
+
+	private static void setTextSizeForWidth(Paint paint, float desiredWidth, String text) {
+		final float testTextSize = 48f;
+		paint.setTextSize(testTextSize);
+		Rect bounds = new Rect();
+		paint.getTextBounds(text, 0, text.length(), bounds);
+		float desiredTextSize = testTextSize * desiredWidth / bounds.width();
+		paint.setTextSize(desiredTextSize);
 	}
 
 	// from AnalogClock.java
@@ -190,10 +195,5 @@ public class FancyClockFace extends View {
 		mLeft = left;
 		mTop = top;
 		mBottom = bottom;
-	}
-
-	@Override
-	public boolean isInEditMode() {
-		return true;
 	}
 }
