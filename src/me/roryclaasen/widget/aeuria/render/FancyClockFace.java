@@ -31,8 +31,7 @@ public class FancyClockFace extends View {
 	private Paint mPaint;
 	private Paint mPaintText;
 
-	private int mTextSizeLarge = 100;
-	private int mTextSizeSmall = 50;
+	private float mTextSizeNormal = 50F;
 
 	private int mBottom;
 	private int mTop;
@@ -128,13 +127,12 @@ public class FancyClockFace extends View {
 		if (sizeChanged) {
 			mBounds.set(cX - (w / 2), cY - (h / 2), cX + (w / 2), cY + (h / 2));
 		}
+		
 		canvas.drawRoundRect(mBounds, w / 2, h / 2, mPaint);
 
-		// TODO Draw text
-
-		setTextSizeForWidth(mPaintText, mBounds.right - 25, mTime.getHour().toUpperCase(Locale.getDefault()));
+		setTextSizeForWidth(mPaintText, mBounds.right, mTime.getHour().toUpperCase(Locale.getDefault()));
 		canvas.drawText(mTime.getHour().toUpperCase(Locale.getDefault()), cX, cY, mPaintText);
-		setTextSizeForWidth(mPaintText, mBounds.right - 75, mTime.getMinute().toUpperCase(Locale.getDefault()));
+		setTextSizeForWidth(mPaintText, mBounds.right, mTime.getMinute().toUpperCase(Locale.getDefault()));
 		canvas.drawText(mTime.getMinute().toLowerCase(Locale.getDefault()), cX, cY + (int) (mPaintText.getTextSize() / 1.5), mPaintText);
 
 		if (scaled) {
@@ -142,8 +140,8 @@ public class FancyClockFace extends View {
 		}
 	}
 
-	private static void setTextSizeForWidth(Paint paint, float desiredWidth, String text) {
-		final float testTextSize = 48f;
+	private void setTextSizeForWidth(Paint paint, float desiredWidth, String text) {
+		final float testTextSize = mTextSizeNormal;
 		paint.setTextSize(testTextSize);
 		Rect bounds = new Rect();
 		paint.getTextBounds(text, 0, text.length(), bounds);
