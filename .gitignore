@@ -1,6 +1,7 @@
-# Old repository (kept for my personal reference)
+# Custom ignored files
 /old/
 .settings/
+.project
 
 # Built application files
 *.apk
