@@ -1,5 +1,6 @@
 # Old repository (kept for my personal reference)
 /old/
+.settings/
 
 # Built application files
 *.apk
@@ -37,8 +38,7 @@ captures/
 
 # Intellij
 *.iml
-.idea/workspace.xml
-.idea/libraries
+.idea/
 
 # Keystore files
 *.jks
