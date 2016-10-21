@@ -63,8 +63,11 @@ public class FancyClockFace extends View {
 		mCalendar = Calendar.getInstance();
 		mTime = new FancyTime(context, mCalendar.getTime());
 
-		Typeface font_hour = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL); /* Typeface.createFromAsset(context.getResources().getAssets(), "fonts/Roboto.ttf"); */
-		// Typeface font_min = Typeface.createFromAsset(context.getResources().getAssets(), "fonts/MTCORSVA.TTF");
+		Typeface font_hour = Typeface.create(Typeface.SERIF, Typeface.BOLD);
+		// font_hour = Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
+		
+		
+		//Typeface font_min = Typeface.createFromAsset(context.getAssets(), "fonts/MTCORSVA.TTF");
 
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaint.setColor(Color.WHITE);
