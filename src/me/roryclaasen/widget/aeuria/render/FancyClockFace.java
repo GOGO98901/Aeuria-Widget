@@ -24,7 +24,7 @@ public class FancyClockFace extends View {
 	private Calendar mCalendar;
 	private FancyTime mTime;
 
-	private int mClockAimFor = 800;
+	private int mClockAimFor = 1080;
 	private int mClockSize = mClockAimFor;
 	private int mMargin;
 	private RectF mBounds;
@@ -65,9 +65,8 @@ public class FancyClockFace extends View {
 
 		Typeface font_hour = Typeface.create(Typeface.SERIF, Typeface.BOLD);
 		// font_hour = Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
-		
-		
-		//Typeface font_min = Typeface.createFromAsset(context.getAssets(), "fonts/MTCORSVA.TTF");
+
+		// Typeface font_min = Typeface.createFromAsset(context.getAssets(), "fonts/MTCORSVA.TTF");
 
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaint.setColor(Color.WHITE);
