@@ -3,12 +3,13 @@ package me.roryclaasen.widget.aeuria.render;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
-
+import android.graphics.PorterDuff;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
@@ -55,6 +56,9 @@ public class FancyClockFace extends View {
 	}
 
 	private void init(Context context, AttributeSet attributeSet, int defStyle) {
+        setWillNotDraw(false);
+        setLayerType(LAYER_TYPE_HARDWARE, null);
+        
 		mContext = context;
 		mCalendar = Calendar.getInstance();
 		mTime = new FancyTime(context, mCalendar.getTime());
@@ -66,12 +70,12 @@ public class FancyClockFace extends View {
 		mPaint.setColor(Color.WHITE);
 		mPaint.setStyle(Paint.Style.FILL);
 
-		mPaintText = new Paint(Paint.ANTI_ALIAS_FLAG);
-		mPaintText.setColor(Color.BLACK);
-		mPaintText.setStyle(Paint.Style.FILL);
+		mPaintText = new Paint(/*Paint.ANTI_ALIAS_FLAG*/);
+		//mPaintText.setStyle(Paint.Style.FILL);
 		mPaintText.setTextAlign(Align.CENTER);
 		mPaintText.setTypeface(font_hour);
 		mPaintText.setTextSize(AppUtil.convertDpToPixel(100, context));
+		mPaintText.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
 
 		mMargin = 8;
 		mBounds = new RectF(mMargin / 2, mMargin / 2, mClockAimFor - mMargin, mClockAimFor - mMargin);
@@ -127,12 +131,12 @@ public class FancyClockFace extends View {
 		if (sizeChanged) {
 			mBounds.set(cX - (w / 2), cY - (h / 2), cX + (w / 2), cY + (h / 2));
 		}
-		
+
 		canvas.drawRoundRect(mBounds, w / 2, h / 2, mPaint);
 
-		setTextSizeForWidth(mPaintText, mBounds.right, mTime.getHour().toUpperCase(Locale.getDefault()));
+		setTextSizeForWidth(mPaintText, mBounds.right / 2, mTime.getHour().toUpperCase(Locale.getDefault()));
 		canvas.drawText(mTime.getHour().toUpperCase(Locale.getDefault()), cX, cY, mPaintText);
-		setTextSizeForWidth(mPaintText, mBounds.right, mTime.getMinute().toUpperCase(Locale.getDefault()));
+		setTextSizeForWidth(mPaintText, mBounds.right / 2, mTime.getMinute().toUpperCase(Locale.getDefault()));
 		canvas.drawText(mTime.getMinute().toLowerCase(Locale.getDefault()), cX, cY + (int) (mPaintText.getTextSize() / 1.5), mPaintText);
 
 		if (scaled) {
