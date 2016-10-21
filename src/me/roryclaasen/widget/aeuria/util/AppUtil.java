@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.util.DisplayMetrics;
+import me.roryclaasen.widget.aeuria.R;
 
 public class AppUtil {
+
 	public static void openUrl(Activity activity, String url) {
 		Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -26,5 +28,13 @@ public class AppUtil {
 		DisplayMetrics metrics = resources.getDisplayMetrics();
 		float px = dp * (metrics.densityDpi / 160f);
 		return px;
+	}
+
+	public static String getLongestHour(Context context) {
+		return context.getResources().getString(R.string.seven);
+	}
+
+	public static String getLongestMinuet(Context context) {
+		return context.getResources().getString(R.string.twenty) + "-" + context.getResources().getString(R.string.seven);
 	}
 }

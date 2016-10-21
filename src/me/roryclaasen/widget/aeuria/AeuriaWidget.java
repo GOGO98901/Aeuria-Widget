@@ -66,7 +66,6 @@ public class AeuriaWidget extends AppWidgetProvider {
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-		Log.d(TAG, "onUpdate");
 		final RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget);
 
 		if (clock == null) {
@@ -76,7 +75,6 @@ public class AeuriaWidget extends AppWidgetProvider {
 			clock.onSizeChanged(s, s, 0, 0);
 			clock.measure(s, s);
 			clock.layout(0, 0, s, s);
-			Log.d(TAG, "size is " + s);
 			clock.setDrawingCacheEnabled(true);
 
 			final PendingIntent intent = ClockUtil.getClockIntent(context);
@@ -130,10 +128,9 @@ public class AeuriaWidget extends AppWidgetProvider {
 	 * @param context application context
 	 */
 	private void startTicking(Context context) {
-		Log.d(TAG, "startTicking");
+		Log.i(TAG, "startTicking");
 		final AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-		// schedules updates so they occur on the top of the minute
+		
 		final Calendar c = Calendar.getInstance();
 		c.setTimeInMillis(System.currentTimeMillis());
 		c.set(Calendar.SECOND, 0);
@@ -149,7 +146,7 @@ public class AeuriaWidget extends AppWidgetProvider {
 	 * @return the intent to update the clock
 	 */
 	private PendingIntent createUpdate(Context context) {
-		Log.d(TAG, "Update");
+		Log.i(TAG, "Update");
 		return PendingIntent.getBroadcast(context, 0, new Intent(ACTION_CLOCK_UPDATE), PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 }

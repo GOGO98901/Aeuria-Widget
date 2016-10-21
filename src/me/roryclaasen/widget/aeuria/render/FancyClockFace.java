@@ -32,7 +32,7 @@ public class FancyClockFace extends View {
 	private Paint mPaint;
 	private Paint mPaintText;
 
-	private float mTextSizeNormal = 50F;
+	private float mTextSizeNormal;
 
 	private int mBottom;
 	private int mTop;
@@ -56,9 +56,9 @@ public class FancyClockFace extends View {
 	}
 
 	private void init(Context context, AttributeSet attributeSet, int defStyle) {
-        setWillNotDraw(false);
-        setLayerType(LAYER_TYPE_HARDWARE, null);
-        
+		setWillNotDraw(false);
+		setLayerType(LAYER_TYPE_HARDWARE, null);
+
 		mContext = context;
 		mCalendar = Calendar.getInstance();
 		mTime = new FancyTime(context, mCalendar.getTime());
@@ -70,31 +70,33 @@ public class FancyClockFace extends View {
 		mPaint.setColor(Color.WHITE);
 		mPaint.setStyle(Paint.Style.FILL);
 
-		mPaintText = new Paint(/*Paint.ANTI_ALIAS_FLAG*/);
-		//mPaintText.setStyle(Paint.Style.FILL);
+		mPaintText = new Paint();
 		mPaintText.setTextAlign(Align.CENTER);
 		mPaintText.setTypeface(font_hour);
-		mPaintText.setTextSize(AppUtil.convertDpToPixel(100, context));
 		mPaintText.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
 
-		mMargin = 8;
+		mTextSizeNormal = mPaintText.getTextSize();
+
 		mBounds = new RectF(mMargin / 2, mMargin / 2, mClockAimFor - mMargin, mClockAimFor - mMargin);
 	}
 
 	public void setTime(long time) {
 		mCalendar.setTimeInMillis(time);
+		mTime = new FancyTime(mContext, mCalendar.getTime());
 
 		invalidate();
 	}
 
 	public void setTime(Calendar calendar) {
 		mCalendar = calendar;
+		mTime = new FancyTime(mContext, mCalendar.getTime());
 
 		invalidate();
 	}
 
 	public void setTimezone(TimeZone timezone) {
 		mCalendar = Calendar.getInstance(timezone);
+		mTime = new FancyTime(mContext, mCalendar.getTime());
 	}
 
 	@Override
@@ -132,25 +134,29 @@ public class FancyClockFace extends View {
 			mBounds.set(cX - (w / 2), cY - (h / 2), cX + (w / 2), cY + (h / 2));
 		}
 
-		canvas.drawRoundRect(mBounds, w / 2, h / 2, mPaint);
-
-		setTextSizeForWidth(mPaintText, mBounds.right / 2, mTime.getHour().toUpperCase(Locale.getDefault()));
+		// canvas.drawRoundRect(mBounds, w / 2, h / 2, mPaint);
+		float r = w / 2;
+		canvas.drawCircle(cX, cY, r, mPaint);
+		setTextSize(true, w);
 		canvas.drawText(mTime.getHour().toUpperCase(Locale.getDefault()), cX, cY, mPaintText);
-		setTextSizeForWidth(mPaintText, mBounds.right / 2, mTime.getMinute().toUpperCase(Locale.getDefault()));
-		canvas.drawText(mTime.getMinute().toLowerCase(Locale.getDefault()), cX, cY + (int) (mPaintText.getTextSize() / 1.5), mPaintText);
+		setTextSize(false, w);
+		canvas.drawText(mTime.getMinute().toLowerCase(Locale.getDefault()), cX, cY + (int) (mPaintText.getTextSize()), mPaintText);
 
 		if (scaled) {
 			canvas.restore();
 		}
 	}
 
-	private void setTextSizeForWidth(Paint paint, float desiredWidth, String text) {
+	private void setTextSize(boolean hour, float desiredWidth) {
 		final float testTextSize = mTextSizeNormal;
-		paint.setTextSize(testTextSize);
+		mPaintText.setTextSize(testTextSize);
 		Rect bounds = new Rect();
-		paint.getTextBounds(text, 0, text.length(), bounds);
+		String text = AppUtil.getLongestMinuet(mContext);
+		if (hour) text = AppUtil.getLongestHour(mContext);
+		text = text.toUpperCase(Locale.getDefault());
+		mPaintText.getTextBounds(text, 0, text.length(), bounds);
 		float desiredTextSize = testTextSize * desiredWidth / bounds.width();
-		paint.setTextSize(desiredTextSize);
+		mPaintText.setTextSize(desiredTextSize);
 	}
 
 	// from AnalogClock.java

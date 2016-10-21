@@ -10,16 +10,23 @@ import me.roryclaasen.widget.aeuria.R;
 
 public class FancyTime {
 	private final Context _context;
+	private final Date date;
 	private final DateFormat format = new SimpleDateFormat("hh:mm", Locale.getDefault());
 
 	private String time;
 
 	public FancyTime(Context context, Date date) {
 		this._context = context;
+		this.date = date;
+		getCurrentTime();
+	}
+
+	private void getCurrentTime() {
 		time = format.format(date);
 	}
 
 	public String getHour() {
+		getCurrentTime();
 		String hour = time.split(":")[0];
 		try {
 			int number = Integer.parseInt(hour);
@@ -31,6 +38,7 @@ public class FancyTime {
 	}
 
 	public String getMinute() {
+		getCurrentTime();
 		String minute = time.split(":")[1];
 		try {
 			int number = Integer.parseInt(minute);
