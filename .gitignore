@@ -1,3 +1,6 @@
+# Old repository (kept for my personal reference)
+/old/
+
 # Built application files
 *.apk
 *.ap_
@@ -35,11 +38,10 @@ captures/
 # Intellij
 *.iml
 .idea/workspace.xml
+.idea/libraries
 
 # Keystore files
 *.jks
 
-# Custom Files
-*.psd
-.project
-.classpath
+# External native build folder generated in Android Studio 2.2 and later
+.externalNativeBuild
