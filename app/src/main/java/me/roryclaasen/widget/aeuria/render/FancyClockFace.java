@@ -30,7 +30,7 @@ public class FancyClockFace extends View {
 	private RectF mBounds;
 
 	private Paint mPaint;
-	private Paint mPaintText;
+	private Paint mPaintText, mPaintTextMin;
 
 	private float mTextSizeNormal;
 
@@ -64,9 +64,9 @@ public class FancyClockFace extends View {
 		mTime = new FancyTime(context, mCalendar.getTime());
 
 		Typeface font_hour = Typeface.create(Typeface.SERIF, Typeface.BOLD);
-		// font_hour = Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
+		font_hour = Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
 
-		// Typeface font_min = Typeface.createFromAsset(context.getAssets(), "fonts/MTCORSVA.TTF");
+		Typeface font_min = Typeface.createFromAsset(context.getAssets(), "fonts/MTCORSVA.TTF");
 
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaint.setColor(Color.WHITE);
@@ -76,6 +76,10 @@ public class FancyClockFace extends View {
 		mPaintText.setTextAlign(Align.CENTER);
 		mPaintText.setTypeface(font_hour);
 		mPaintText.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+		mPaintTextMin = new Paint();
+		mPaintTextMin.setTextAlign(Align.CENTER);
+		mPaintTextMin.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+		mPaintTextMin.setTypeface(font_min);
 
 		mTextSizeNormal = mPaintText.getTextSize();
 
@@ -139,26 +143,26 @@ public class FancyClockFace extends View {
 		// canvas.drawRoundRect(mBounds, w / 2, h / 2, mPaint);
 		float r = w / 2;
 		canvas.drawCircle(cX, cY, r, mPaint);
-		setTextSize(true, w);
+		setTextSize(mPaintText, true, w);
 		canvas.drawText(mTime.getHour().toUpperCase(Locale.getDefault()), cX, cY, mPaintText);
-		setTextSize(false, w);
-		canvas.drawText(mTime.getMinute().toLowerCase(Locale.getDefault()), cX, cY + (int) (mPaintText.getTextSize()), mPaintText);
+		setTextSize(mPaintTextMin, false, w);
+		canvas.drawText(mTime.getMinute().toLowerCase(Locale.getDefault()), cX, cY + (int) (mPaintTextMin.getTextSize()), mPaintTextMin);
 
 		if (scaled) {
 			canvas.restore();
 		}
 	}
 
-	private void setTextSize(boolean hour, float desiredWidth) {
+	private void setTextSize(Paint paint, boolean hour, float desiredWidth) {
 		final float testTextSize = mTextSizeNormal;
-		mPaintText.setTextSize(testTextSize);
+		paint.setTextSize(testTextSize);
 		Rect bounds = new Rect();
 		String text = AppUtil.getLongestMinuet(mContext);
 		if (hour) text = AppUtil.getLongestHour(mContext);
 		text = text.toUpperCase(Locale.getDefault());
-		mPaintText.getTextBounds(text, 0, text.length(), bounds);
+		paint.getTextBounds(text, 0, text.length(), bounds);
 		float desiredTextSize = testTextSize * desiredWidth / bounds.width();
-		mPaintText.setTextSize(desiredTextSize);
+		paint.setTextSize(desiredTextSize);
 	}
 
 	// from AnalogClock.java
