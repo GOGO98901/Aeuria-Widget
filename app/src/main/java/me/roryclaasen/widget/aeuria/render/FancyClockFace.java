@@ -30,7 +30,7 @@ public class FancyClockFace extends View {
 	private RectF mBounds;
 
 	private Paint mPaint;
-	private Paint mPaintText, mPaintTextMin;
+	private Paint mPaintTextHour, mPaintTextMin;
 
 	private float mTextSizeNormal;
 
@@ -63,27 +63,30 @@ public class FancyClockFace extends View {
 		mCalendar = Calendar.getInstance();
 		mTime = new FancyTime(context, mCalendar.getTime());
 
-		Typeface font_hour = Typeface.create(Typeface.SERIF, Typeface.BOLD);
-		font_hour = Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
-
-		Typeface font_min = Typeface.createFromAsset(context.getAssets(), "fonts/MTCORSVA.TTF");
-
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaint.setColor(Color.WHITE);
 		mPaint.setStyle(Paint.Style.FILL);
 
-		mPaintText = new Paint();
-		mPaintText.setTextAlign(Align.CENTER);
-		mPaintText.setTypeface(font_hour);
-		mPaintText.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+		createFonts();
+
+		mBounds = new RectF(mMargin / 2, mMargin / 2, mClockAimFor - mMargin, mClockAimFor - mMargin);
+	}
+
+	private void createFonts() {
+		Typeface font_hour = Typeface.createFromAsset(mContext.getAssets(), "fonts/roboto.ttf");
+		Typeface font_min = Typeface.createFromAsset(mContext.getAssets(), "fonts/MTCORSVA.TTF");
+
+		mPaintTextHour = new Paint();
+		mPaintTextHour.setTextAlign(Align.CENTER);
+		mPaintTextHour.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+		mPaintTextHour.setTypeface(font_hour);
+
 		mPaintTextMin = new Paint();
 		mPaintTextMin.setTextAlign(Align.CENTER);
 		mPaintTextMin.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
 		mPaintTextMin.setTypeface(font_min);
 
-		mTextSizeNormal = mPaintText.getTextSize();
-
-		mBounds = new RectF(mMargin / 2, mMargin / 2, mClockAimFor - mMargin, mClockAimFor - mMargin);
+		mTextSizeNormal = mPaintTextHour.getTextSize();
 	}
 
 	public void setTime(long time) {
@@ -143,8 +146,8 @@ public class FancyClockFace extends View {
 		// canvas.drawRoundRect(mBounds, w / 2, h / 2, mPaint);
 		float r = w / 2;
 		canvas.drawCircle(cX, cY, r, mPaint);
-		setTextSize(mPaintText, true, w);
-		canvas.drawText(mTime.getHour().toUpperCase(Locale.getDefault()), cX, cY, mPaintText);
+		setTextSize(mPaintTextHour, true, w);
+		canvas.drawText(mTime.getHour().toUpperCase(Locale.getDefault()), cX, cY, mPaintTextHour);
 		setTextSize(mPaintTextMin, false, w);
 		canvas.drawText(mTime.getMinute().toLowerCase(Locale.getDefault()), cX, cY + (int) (mPaintTextMin.getTextSize()), mPaintTextMin);
 
@@ -168,7 +171,6 @@ public class FancyClockFace extends View {
 	// from AnalogClock.java
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
 		final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
 		final int widthSize = MeasureSpec.getSize(widthMeasureSpec);
 		final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
