@@ -44,24 +44,16 @@ public class AeuriaWidget extends AppWidgetProvider {
 		final AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
 		alarmManager.cancel(createUpdate(context));
-        Log.i(TAG, "disabled");
 	}
-
-    @Override
-    public void onDeleted(Context context, int[] appWidgetIds) {
-        super.onDeleted(context, appWidgetIds);
-
-        Toast.makeText(context, "Widget Deleted!", Toast.LENGTH_SHORT).show();
-    }
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		super.onReceive(context, intent);
 
 		final String action = intent.getAction();
-        Log.i(TAG, action);
+        // Log.i(TAG, action);
 
-		if (ACTION_UPDATE.equals(action) || action.equals("android.appwidget.action.APPWIDGET_UPDAT") || Intent.ACTION_TIME_CHANGED.equals(action) || Intent.ACTION_TIMEZONE_CHANGED.equals(action)) {
+		if (ACTION_UPDATE.equals(action) || action.equals("android.appwidget.action.APPWIDGET_UPDATE") || Intent.ACTION_TIME_CHANGED.equals(action) || Intent.ACTION_TIMEZONE_CHANGED.equals(action)) {
 			final ComponentName appWidgets = new ComponentName(context.getPackageName(), getClass().getName());
 			final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 			final int ids[] = appWidgetManager.getAppWidgetIds(appWidgets);
@@ -104,7 +96,6 @@ public class AeuriaWidget extends AppWidgetProvider {
 			final Canvas c = new Canvas(mCached);
 			clock.draw(c);
 
-			// make it immutable
 			mCached = Bitmap.createBitmap(mCached);
 			shouldRecycle = true;
 		}
@@ -134,7 +125,7 @@ public class AeuriaWidget extends AppWidgetProvider {
 	}
 
 	private void startTicking(Context context) {
-		Log.i(TAG, "startTicking");
+		// Log.i(TAG, "startTicking");
 		final AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		
 		final Calendar c = Calendar.getInstance();
