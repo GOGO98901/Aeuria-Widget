@@ -55,7 +55,6 @@ public class ClockUtil {
 		}
 
 		if (foundClockImpl) {
-
 			return PendingIntent.getActivity(context, 0, alarmClockIntent, 0);
 		} else {
 			return null;

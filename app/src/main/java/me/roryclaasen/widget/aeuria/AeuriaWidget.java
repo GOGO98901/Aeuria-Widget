@@ -16,6 +16,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.RemoteViews;
+import android.widget.Toast;
+
 import me.roryclaasen.widget.aeuria.render.FancyClockFace;
 import me.roryclaasen.widget.aeuria.util.ClockUtil;
 
@@ -26,7 +28,7 @@ public class AeuriaWidget extends AppWidgetProvider {
 	private boolean mFirst = true;
 	private Bitmap mCached = null;
 
-	public static String ACTION_CLOCK_UPDATE = "me.roryclaasen.widget.aeuria.ACTION_CLOCK_UPDATE";
+	public static String ACTION_UPDATE = "me.roryclaasen.widget.aeuria.ACTION_CLOCK_UPDATE";
 
 	@Override
 	public void onEnabled(Context context) {
@@ -42,15 +44,24 @@ public class AeuriaWidget extends AppWidgetProvider {
 		final AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
 		alarmManager.cancel(createUpdate(context));
+        Log.i(TAG, "disabled");
 	}
+
+    @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        super.onDeleted(context, appWidgetIds);
+
+        Toast.makeText(context, "Widget Deleted!", Toast.LENGTH_SHORT).show();
+    }
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		super.onReceive(context, intent);
 
 		final String action = intent.getAction();
+        Log.i(TAG, action);
 
-		if (ACTION_CLOCK_UPDATE.equals(action) || Intent.ACTION_TIME_CHANGED.equals(action) || Intent.ACTION_TIMEZONE_CHANGED.equals(action)) {
+		if (ACTION_UPDATE.equals(action) || action.equals("android.appwidget.action.APPWIDGET_UPDAT") || Intent.ACTION_TIME_CHANGED.equals(action) || Intent.ACTION_TIMEZONE_CHANGED.equals(action)) {
 			final ComponentName appWidgets = new ComponentName(context.getPackageName(), getClass().getName());
 			final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 			final int ids[] = appWidgetManager.getAppWidgetIds(appWidgets);
@@ -122,11 +133,6 @@ public class AeuriaWidget extends AppWidgetProvider {
 		return dm.density;
 	}
 
-	/**
-	 * Schedules an alarm to update the clock every minute, at the top of the minute.
-	 *
-	 * @param context application context
-	 */
 	private void startTicking(Context context) {
 		Log.i(TAG, "startTicking");
 		final AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -139,14 +145,7 @@ public class AeuriaWidget extends AppWidgetProvider {
 		alarmManager.setRepeating(AlarmManager.RTC, c.getTimeInMillis(), 1000 * 60, createUpdate(context));
 	}
 
-	/**
-	 * Creates an intent to update the clock(s).
-	 *
-	 * @param context application context
-	 * @return the intent to update the clock
-	 */
 	private PendingIntent createUpdate(Context context) {
-		Log.i(TAG, "Update");
-		return PendingIntent.getBroadcast(context, 0, new Intent(ACTION_CLOCK_UPDATE), PendingIntent.FLAG_UPDATE_CURRENT);
+		return PendingIntent.getBroadcast(context, 0, new Intent(ACTION_UPDATE), PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 }
