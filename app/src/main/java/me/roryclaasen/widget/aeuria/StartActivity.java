@@ -28,7 +28,7 @@ public class StartActivity extends Activity {
 			return true;
 		}
 		if (id == R.id.action_about) {
-			AppUtil.openUrl(this, "http://roryclaasen.me/project/aeuria-widget");
+			AppUtil.openUrl(this, "http://github.com/GOGO98901/Aeuria-Widget#readme");
 			return true;
 		}
 		if (id == R.id.action_help) {
