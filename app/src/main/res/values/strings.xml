@@ -2,15 +2,17 @@
 <resources>
 
     <string name="app_name">Aeuria Widget</string>
-    <string name="app_aurthor">Rory Claasen</string>
+    <string name="app_author">Rory Claasen</string>
     <string name="action_github">GitHub</string>
     <string name="action_about">About</string>
     <string name="action_help">Help</string>
     
     <string name="error">Error</string>
     <string name="loading">Loading</string>
+
+    <string name="fuck_off">Estelle</string>
     
-    <string name="intro_text">This is a preview of the homescreen widget</string>
+    <string name="intro_text">This is a preview of the home screen widget</string>
 
     <string name="ohh">oh</string>
     <string name="oclock">o\'clock</string>
@@ -29,7 +31,7 @@
     <string name="twelve">twelve</string>
     <string name="thirteen">thirteen</string>
     <string name="fourteen">fourteen</string>
-    <string name="fithteen">fithteen</string>
+    <string name="fifteen">fifteen</string>
     <string name="sixteen">sixteen</string>
     <string name="seventeen">seventeen</string>
     <string name="eighteen">eighteen</string>

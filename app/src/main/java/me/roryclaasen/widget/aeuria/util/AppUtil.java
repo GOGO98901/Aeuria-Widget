@@ -34,7 +34,7 @@ public class AppUtil {
 		return context.getResources().getString(R.string.seven);
 	}
 
-	public static String getLongestMinuet(Context context) {
+	public static String getLongestMinute(Context context) {
 		return context.getResources().getString(R.string.twenty) + "-" + context.getResources().getString(R.string.seven);
 	}
 }

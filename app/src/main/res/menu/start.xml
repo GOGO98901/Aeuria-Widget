@@ -3,13 +3,8 @@
     tools:context="me.roryclaasen.widget.aeuria.StartActivity" >
 
     <item
-        android:id="@+id/action_about"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_about"/>
-    <item
         android:id="@+id/action_github"
-        android:orderInCategory="100"
+        android:orderInCategory="2"
         android:showAsAction="never"
         android:title="@string/action_github"/>
     <item

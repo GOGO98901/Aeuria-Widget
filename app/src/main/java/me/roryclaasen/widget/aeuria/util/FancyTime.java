@@ -102,7 +102,7 @@ public class FancyTime {
 				return _context.getString(R.string.fourteen);
 			}
 			case (15): {
-				return _context.getString(R.string.fithteen);
+				return _context.getString(R.string.fifteen);
 			}
 			case (16): {
 				return _context.getString(R.string.sixteen);

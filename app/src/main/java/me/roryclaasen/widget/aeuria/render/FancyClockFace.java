@@ -14,19 +14,19 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import me.roryclaasen.widget.aeuria.util.AppUtil;
 import me.roryclaasen.widget.aeuria.util.FancyTime;
 
 public class FancyClockFace extends View {
 
-	private Context mContext;
-	private Calendar mCalendar;
-	private FancyTime mTime;
+	private Context context;
+	private Calendar calendar;
+	private FancyTime fancyTime;
 
-	private int mClockAimFor = 1080;
-	private int mClockSize = mClockAimFor;
-	private int mMargin;
+	private int clockSize = 1080;
+
 	private RectF mBounds;
 
 	private Paint mPaint;
@@ -59,9 +59,9 @@ public class FancyClockFace extends View {
 		setWillNotDraw(false);
 		setLayerType(LAYER_TYPE_HARDWARE, null);
 
-		mContext = context;
-		mCalendar = Calendar.getInstance();
-		mTime = new FancyTime(context, mCalendar.getTime());
+		this.context = context;
+		calendar = Calendar.getInstance();
+		fancyTime = new FancyTime(context, calendar.getTime());
 
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaint.setColor(Color.WHITE);
@@ -69,43 +69,45 @@ public class FancyClockFace extends View {
 
 		createFonts();
 
-		mBounds = new RectF(mMargin / 2, mMargin / 2, mClockAimFor - mMargin, mClockAimFor - mMargin);
+		mBounds = new RectF(0, 0, clockSize, clockSize);
 	}
 
 	private void createFonts() {
-		Typeface font_hour = Typeface.createFromAsset(mContext.getAssets(), "fonts/roboto.ttf");
-		Typeface font_min = Typeface.createFromAsset(mContext.getAssets(), "fonts/MTCORSVA.TTF");
+		Typeface font_hour = Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
+		Typeface font_min = Typeface.createFromAsset(context.getAssets(), "fonts/MTCORSVA.TTF");
 
-		mPaintTextHour = new Paint();
-		mPaintTextHour.setTextAlign(Align.CENTER);
-		mPaintTextHour.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+		mPaintTextHour = createPaintFont();
 		mPaintTextHour.setTypeface(font_hour);
 
-		mPaintTextMin = new Paint();
-		mPaintTextMin.setTextAlign(Align.CENTER);
-		mPaintTextMin.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        mPaintTextMin = createPaintFont();
 		mPaintTextMin.setTypeface(font_min);
 
 		mTextSizeNormal = mPaintTextHour.getTextSize();
 	}
 
+    private Paint createPaintFont() {
+        Paint paint = new Paint();
+        paint.setTextAlign(Align.CENTER);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        return paint;
+    }
+
 	public void setTime(long time) {
-		mCalendar.setTimeInMillis(time);
-		mTime = new FancyTime(mContext, mCalendar.getTime());
+		calendar.setTimeInMillis(time);
+		fancyTime = new FancyTime(context, calendar.getTime());
 
 		invalidate();
 	}
 
 	public void setTime(Calendar calendar) {
-		mCalendar = calendar;
-		mTime = new FancyTime(mContext, mCalendar.getTime());
+		this.calendar = calendar;
+		fancyTime = new FancyTime(context, this.calendar.getTime());
 
 		invalidate();
 	}
 
 	public void setTimezone(TimeZone timezone) {
-		mCalendar = Calendar.getInstance(timezone);
-		mTime = new FancyTime(mContext, mCalendar.getTime());
+        setTime(Calendar.getInstance(timezone));
 	}
 
 	@Override
@@ -124,48 +126,49 @@ public class FancyClockFace extends View {
 		final int availW = mRight - mLeft;
 		final int availH = mBottom - mTop;
 
-		final int cX = availW / 2;
-		final int cY = availH / 2;
-
-		final int w = mClockSize;
-		final int h = mClockSize;
+		final int centerX = availW / 2;
+		final int centerY = availH / 2;
 
 		boolean scaled = false;
 
-		if (availW < w || availH < h) {
+		if (availW < clockSize || availH < clockSize) {
 			scaled = true;
-			final float scale = Math.min((float) availW / (float) w, (float) availH / (float) h);
+			final float scale = Math.min((float) availW / (float) clockSize, (float) availH / (float) clockSize);
 			canvas.save();
-			canvas.scale(scale, scale, cX, cY);
+			canvas.scale(scale, scale, centerX, centerY);
 		}
 
 		if (sizeChanged) {
-			mBounds.set(cX - (w / 2), cY - (h / 2), cX + (w / 2), cY + (h / 2));
+			mBounds.set(centerX - (availW / 2), centerY - (availH / 2), centerX + (availW / 2), centerY + (availH / 2));
 		}
 
-		// canvas.drawRoundRect(mBounds, w / 2, h / 2, mPaint);
-		float r = w / 2;
-		canvas.drawCircle(cX, cY, r, mPaint);
-		setTextSize(mPaintTextHour, true, w);
-		canvas.drawText(mTime.getHour().toUpperCase(Locale.getDefault()), cX, cY, mPaintTextHour);
-		setTextSize(mPaintTextMin, false, w);
-		canvas.drawText(mTime.getMinute().toLowerCase(Locale.getDefault()), cX, cY + (int) (mPaintTextMin.getTextSize()), mPaintTextMin);
+		float radius = Math.min(availW, availH) / 2;
+		canvas.drawCircle(centerX, centerY, radius, mPaint);
+
+		setTextSize(mPaintTextHour, getWidth(radius, Math.round(mPaintTextHour.getTextSize())));
+		canvas.drawText(fancyTime.getHour().toUpperCase(), centerX, centerY, mPaintTextHour);
+
+		setTextSize(mPaintTextMin, getWidth(radius, Math.round(mPaintTextMin.getTextSize())));
+		canvas.drawText(fancyTime.getMinute().toLowerCase(), centerX, centerY + (int) (mPaintTextMin.getTextSize()), mPaintTextMin);
 
 		if (scaled) {
 			canvas.restore();
 		}
 	}
 
-	private void setTextSize(Paint paint, boolean hour, float desiredWidth) {
-		final float testTextSize = mTextSizeNormal;
+    private float getWidth(float radius, int offset) {
+        return (float) Math.sqrt((radius * radius) - (offset * offset)) * 2;
+    }
+
+	private void setTextSize(Paint paint, float desiredWidth) {
+        String text = AppUtil.getLongestMinute(context);
+        if (paint == mPaintTextHour) text = AppUtil.getLongestHour(context).toUpperCase();
+
+		final float testTextSize = 48f;
 		paint.setTextSize(testTextSize);
 		Rect bounds = new Rect();
-		String text = AppUtil.getLongestMinuet(mContext);
-		if (hour) text = AppUtil.getLongestHour(mContext);
-		text = text.toUpperCase(Locale.getDefault());
 		paint.getTextBounds(text, 0, text.length(), bounds);
-		float desiredTextSize = testTextSize * desiredWidth / bounds.width();
-		paint.setTextSize(desiredTextSize);
+		paint.setTextSize(testTextSize * desiredWidth / bounds.width());
 	}
 
 	// from AnalogClock.java
@@ -179,34 +182,33 @@ public class FancyClockFace extends View {
 		float hScale = 1.0f;
 		float vScale = 1.0f;
 
-		if (widthMode != MeasureSpec.UNSPECIFIED && widthSize < mClockSize) {
-			hScale = (float) widthSize / (float) mClockSize;
+		if (widthMode != MeasureSpec.UNSPECIFIED && widthSize < clockSize) {
+			hScale = (float) widthSize / (float) clockSize;
 		}
 
-		if (heightMode != MeasureSpec.UNSPECIFIED && heightSize < mClockSize) {
-			vScale = (float) heightSize / (float) mClockSize;
+		if (heightMode != MeasureSpec.UNSPECIFIED && heightSize < clockSize) {
+			vScale = (float) heightSize / (float) clockSize;
 		}
 
 		final float scale = Math.min(hScale, vScale);
 
-		setMeasuredDimension(getDefaultSize((int) (mClockSize * scale), widthMeasureSpec), getDefaultSize((int) (mClockSize * scale), heightMeasureSpec));
+		setMeasuredDimension(getDefaultSize((int) (clockSize * scale), widthMeasureSpec), getDefaultSize((int) (clockSize * scale), heightMeasureSpec));
 	}
 
 	@Override
 	protected int getSuggestedMinimumHeight() {
-		return mClockSize;
+		return clockSize;
 	}
 
 	@Override
 	protected int getSuggestedMinimumWidth() {
-		return mClockSize;
+		return clockSize;
 	}
 
 	@Override
 	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 		super.onLayout(changed, left, top, right, bottom);
 
-		// because we don't have access to the actual protected fields
 		mRight = right;
 		mLeft = left;
 		mTop = top;

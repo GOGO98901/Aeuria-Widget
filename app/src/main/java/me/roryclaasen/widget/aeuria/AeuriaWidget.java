@@ -6,12 +6,14 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Build;
+import android.provider.AlarmClock;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
@@ -82,7 +84,9 @@ public class AeuriaWidget extends AppWidgetProvider {
 
 			final PendingIntent intent = ClockUtil.getClockIntent(context);
 			if (intent != null) {
-				rv.setOnClickPendingIntent(R.id.clock, intent);
+                Intent openClockIntent = new Intent(AlarmClock.ACTION_SET_ALARM);
+                openClockIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				rv.setOnClickPendingIntent(R.id.clock, PendingIntent.getActivity(context, 0, openClockIntent, 0));
 			}
 
 			mCached = clock.getDrawingCache(true);
