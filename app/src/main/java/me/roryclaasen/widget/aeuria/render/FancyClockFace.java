@@ -13,9 +13,12 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
+import me.roryclaasen.widget.aeuria.R;
 import me.roryclaasen.widget.aeuria.util.AppUtil;
 import me.roryclaasen.widget.aeuria.util.FancyTime;
 
@@ -64,7 +67,7 @@ public class FancyClockFace extends View {
 		fancyTime = new FancyTime(context, calendar.getTime());
 
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		mPaint.setColor(Color.WHITE);
+		mPaint.setColor(ContextCompat.getColor(context, R.color.widget_background_dark));
 		mPaint.setStyle(Paint.Style.FILL);
 
 		createFonts();
