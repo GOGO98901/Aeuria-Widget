@@ -16,7 +16,9 @@ import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import me.roryclaasen.widget.aeuria.R;
 import me.roryclaasen.widget.aeuria.util.AppUtil;
@@ -29,6 +31,7 @@ public class FancyClockFace extends View {
 	private FancyTime fancyTime;
 
 	private int clockSize = 1080;
+    private float textPadding = 160f;
 
 	private RectF mBounds;
 
@@ -164,7 +167,7 @@ public class FancyClockFace extends View {
         String text = AppUtil.getLongestMinute(context);
         if (paint == mPaintTextHour) text = AppUtil.getLongestHour(context).toUpperCase();
 
-        desiredWidth -= AppUtil.getDisplayDensity(context) * 16f; // TEMP Padding value
+        desiredWidth -= AppUtil.getDisplayDensity(context) * textPadding;
 
 		final float testTextSize = 48f;
 		paint.setTextSize(testTextSize);
@@ -220,12 +223,29 @@ public class FancyClockFace extends View {
     public void updatePaintWithPrefs() {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        boolean dark = sharedPrefs.getBoolean("dark_mode", false);
         int background = ContextCompat.getColor(context, R.color.widget_background_light);
-        if (dark) {
+        if (sharedPrefs.getBoolean("dark_mode", false)) {
             background = ContextCompat.getColor(context, R.color.widget_background_dark);
         }
 
+        switch (sharedPrefs.getString("text_size", "Default")) {
+            case "Tiny": {
+                textPadding = 200f;
+                break;
+            }
+            case "Small": {
+                textPadding = 150f;
+                break;
+            }
+            case "Large": {
+                textPadding = 50f;
+                break;
+            }
+            default: {
+                textPadding = 100f;
+                break;
+            }
+        }
         mPaint.setColor(background);
     }
 }
