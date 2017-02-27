@@ -1,7 +1,7 @@
 # Custom ignored files
 /old/
 .settings/
-.project
+# .project
 
 # Built application files
 *.apk

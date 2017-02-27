@@ -31,7 +31,7 @@ public class StartActivity extends Activity {
                 }
                 handler.postDelayed(this, 60 * 1000);
             }
-        }, 60 * 1000);
+        }, (60 - Calendar.getInstance().get(Calendar.SECOND)) * 1000);
 	}
 
 	@Override
