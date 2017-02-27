@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    tools:context="me.roryclaasen.widget.aeuria.StartActivity" >
+    tools:context="me.roryclaasen.widget.aeuria.PreviewActivity" >
 
     <me.roryclaasen.widget.aeuria.render.FancyClockFace
         android:id="@+id/clock"

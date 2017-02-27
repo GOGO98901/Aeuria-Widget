@@ -13,7 +13,7 @@ import java.util.Calendar;
 import me.roryclaasen.widget.aeuria.render.FancyClockFace;
 import me.roryclaasen.widget.aeuria.util.AppUtil;
 
-public class StartActivity extends Activity {
+public class PreviewActivity extends Activity {
 
     private static final int RESULT_SETTINGS = 1;
 
