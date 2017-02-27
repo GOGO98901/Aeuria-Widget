@@ -1,21 +1,21 @@
 package me.roryclaasen.widget.aeuria.render;
 
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.TimeZone;
+
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import me.roryclaasen.widget.aeuria.R;
@@ -34,8 +34,6 @@ public class FancyClockFace extends View {
 
 	private Paint mPaint;
 	private Paint mPaintTextHour, mPaintTextMin;
-
-	private float mTextSizeNormal;
 
 	private int mBottom;
 	private int mTop;
@@ -67,25 +65,22 @@ public class FancyClockFace extends View {
 		fancyTime = new FancyTime(context, calendar.getTime());
 
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		mPaint.setColor(ContextCompat.getColor(context, R.color.widget_background_dark));
+		// mPaint.setColor(ContextCompat.getColor(context, R.color.widget_background_light));
 		mPaint.setStyle(Paint.Style.FILL);
 
 		createFonts();
 
 		mBounds = new RectF(0, 0, clockSize, clockSize);
+
+        updatePaintWithPrefs();
 	}
 
 	private void createFonts() {
-		Typeface font_hour = Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
-		Typeface font_min = Typeface.createFromAsset(context.getAssets(), "fonts/MTCORSVA.TTF");
-
 		mPaintTextHour = createPaintFont();
-		mPaintTextHour.setTypeface(font_hour);
+		mPaintTextHour.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf"));
 
         mPaintTextMin = createPaintFont();
-		mPaintTextMin.setTypeface(font_min);
-
-		mTextSizeNormal = mPaintTextHour.getTextSize();
+		mPaintTextMin.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/MTCORSVA.TTF"));
 	}
 
     private Paint createPaintFont() {
@@ -122,6 +117,8 @@ public class FancyClockFace extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
+
+        updatePaintWithPrefs();
 
 		final boolean sizeChanged = mSizeChanged;
 		mSizeChanged = false;
@@ -166,6 +163,8 @@ public class FancyClockFace extends View {
 	private void setTextSize(Paint paint, float desiredWidth) {
         String text = AppUtil.getLongestMinute(context);
         if (paint == mPaintTextHour) text = AppUtil.getLongestHour(context).toUpperCase();
+
+        desiredWidth -= AppUtil.getDisplayDensity(context) * 16f; // TEMP Padding value
 
 		final float testTextSize = 48f;
 		paint.setTextSize(testTextSize);
@@ -217,4 +216,16 @@ public class FancyClockFace extends View {
 		mTop = top;
 		mBottom = bottom;
 	}
+
+    public void updatePaintWithPrefs() {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        boolean dark = sharedPrefs.getBoolean("dark_mode", false);
+        int background = ContextCompat.getColor(context, R.color.widget_background_light);
+        if (dark) {
+            background = ContextCompat.getColor(context, R.color.widget_background_dark);
+        }
+
+        mPaint.setColor(background);
+    }
 }

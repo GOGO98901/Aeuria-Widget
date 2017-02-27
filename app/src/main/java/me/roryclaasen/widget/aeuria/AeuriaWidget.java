@@ -6,7 +6,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -14,14 +13,11 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Build;
 import android.provider.AlarmClock;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.WindowManager;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import me.roryclaasen.widget.aeuria.render.FancyClockFace;
-import me.roryclaasen.widget.aeuria.util.ClockUtil;
+import me.roryclaasen.widget.aeuria.util.AppUtil;
 
 public class AeuriaWidget extends AppWidgetProvider {
 	private static final String TAG = AeuriaWidget.class.getSimpleName();
@@ -66,7 +62,7 @@ public class AeuriaWidget extends AppWidgetProvider {
 	}
 
 	protected float getSize(Context context) {
-		return 453f * getDisplayDensity(context);
+		return 453f * AppUtil.getDisplayDensity(context);
 	}
 
 	@Override
@@ -82,7 +78,7 @@ public class AeuriaWidget extends AppWidgetProvider {
 			clock.layout(0, 0, s, s);
 			clock.setDrawingCacheEnabled(true);
 
-			final PendingIntent intent = ClockUtil.getClockIntent(context);
+			final PendingIntent intent = AppUtil.getClockIntent(context);
 			if (intent != null) {
                 Intent openClockIntent = new Intent(AlarmClock.ACTION_SET_ALARM);
                 openClockIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -120,12 +116,6 @@ public class AeuriaWidget extends AppWidgetProvider {
 		if (shouldRecycle) {
 			mCached.recycle();
 		}
-	}
-
-	protected float getDisplayDensity(Context context) {
-		final DisplayMetrics dm = new DisplayMetrics();
-		((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(dm);
-		return dm.density;
 	}
 
 	private void startTicking(Context context) {

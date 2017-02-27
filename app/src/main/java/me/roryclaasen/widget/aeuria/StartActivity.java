@@ -1,6 +1,7 @@
 package me.roryclaasen.widget.aeuria;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -13,6 +14,8 @@ import me.roryclaasen.widget.aeuria.render.FancyClockFace;
 import me.roryclaasen.widget.aeuria.util.AppUtil;
 
 public class StartActivity extends Activity {
+
+    private static final int RESULT_SETTINGS = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,11 @@ public class StartActivity extends Activity {
 			AppUtil.openUrl(this, "http://github.com/GOGO98901/Aeuria-Widget/issues");
 			return true;
 		}
+        if (id == R.id.action_settings) {
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivityForResult(i, RESULT_SETTINGS);
+        }
+
 		return super.onOptionsItemSelected(item);
 	}
 }
