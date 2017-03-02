@@ -9,9 +9,11 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.provider.AlarmClock;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -118,7 +120,7 @@ public class AeuriaWidget extends AppWidgetProvider {
 		}
 	}
 
-	private void startTicking(Context context) {
+	private void startTicking(final Context context) {
 		// Log.i(TAG, "startTicking");
 		final AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		
@@ -128,7 +130,19 @@ public class AeuriaWidget extends AppWidgetProvider {
 		c.set(Calendar.MILLISECOND, 0);
 		c.add(Calendar.MINUTE, 1);
 		alarmManager.setRepeating(AlarmManager.RTC, c.getTimeInMillis(), 1000 * 60, createUpdate(context));
-	}
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPrefs.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                try {
+                    createUpdate(context).send();
+                } catch (PendingIntent.CanceledException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
 	private PendingIntent createUpdate(Context context) {
 		return PendingIntent.getBroadcast(context, 0, new Intent(ACTION_UPDATE), PendingIntent.FLAG_UPDATE_CURRENT);

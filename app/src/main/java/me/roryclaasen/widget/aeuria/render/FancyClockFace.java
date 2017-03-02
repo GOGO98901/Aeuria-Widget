@@ -16,9 +16,7 @@ import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import me.roryclaasen.widget.aeuria.R;
 import me.roryclaasen.widget.aeuria.util.AppUtil;
@@ -68,7 +66,7 @@ public class FancyClockFace extends View {
 		fancyTime = new FancyTime(context, calendar.getTime());
 
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		// mPaint.setColor(ContextCompat.getColor(context, R.color.widget_background_light));
+		mPaint.setColor(ContextCompat.getColor(context, R.color.widget_background_light));
 		mPaint.setStyle(Paint.Style.FILL);
 
 		createFonts();
@@ -221,12 +219,15 @@ public class FancyClockFace extends View {
 	}
 
     public void updatePaintWithPrefs() {
+        if (this.isInEditMode()) return;
+
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         int background = ContextCompat.getColor(context, R.color.widget_background_light);
         if (sharedPrefs.getBoolean("dark_mode", false)) {
             background = ContextCompat.getColor(context, R.color.widget_background_dark);
         }
+        mPaint.setColor(background);
 
         switch (sharedPrefs.getString("text_size", "Default")) {
             case "Tiny": {
@@ -246,6 +247,5 @@ public class FancyClockFace extends View {
                 break;
             }
         }
-        mPaint.setColor(background);
     }
 }
